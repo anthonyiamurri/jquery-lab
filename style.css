@@ -92,6 +92,10 @@ button {
   margin: 5%;
 }
 
+.reserved:hover {
+  
+}
+
 .textinput {
   margin: 40px 0px 40px 0px;
 }
