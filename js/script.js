@@ -6,24 +6,27 @@ $(document).ready(function() {
 
   var tablenum = 0;
 
-  var lastTableClicked = 0;
-
   // show reservation pop-up when available table clicked
 
   $(".available").on("click", function(event) {
-    var tablenum = $(this).attr("data-tablenum");
-    tablenum = parseInt(tablenum);
-    tablenum = Number(tablenum);
+    // var tablenum = $(this).attr("data-tablenum");
+    var tableNum = getNumberFromTable(this);
     lastTableClicked = this;
     $("#tableNumber").text("Table Number: " + tablenum);
     $("#form").fadeIn();
-    $("#reserve").click(function() {
-      $('#form').fadeOut();
       // $(this).toggleClass("reserved");
     });
 
   });
 
+
+  var tableReservations = [];
+  var lastTableClicked;
+  var lastTableNumberClicked;
+
+  function getNumberFromTable(table) {
+    return parseInt( $(table).text().trim());
+  }
 
   var tableNumber = $("");
 
@@ -40,13 +43,28 @@ $(document).ready(function() {
     });
   });
 
+$(".table").on("mouseenter", function() {
+  var tableNum = getNumberFromTable(this);
+  if ($(this).hasClass("reserved")) {
+    var reservation = tableReservations[tableNum];
+  }
+});
+
+
   // reserve table
 
-  // $(function() {
-  //   $("#reserve").click(function() {
-  //     $('#form').hide();
-  //     $(tablenum).toggleClass("reserved");
-  //   });
-  // });
+  $("#reserve").click(function() {
+    $(lastTableClicked).addClass("reserved").removeClass("available");
 
-});
+    var name = $("#name").val();
+    var partySize = $("#partySize").val();
+    var reservation = {
+      name: name,
+      partySize: partySize
+    };
+    console.log(reservation);
+    var tableNum = getNumberFromTable(lastTableClicked);
+    tableReservations[tableNum] = reservation;
+
+    $('#form').hide();
+  });
